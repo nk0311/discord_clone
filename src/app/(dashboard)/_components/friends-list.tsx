@@ -1,10 +1,15 @@
+"use client";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, MessageCircleIcon, XIcon } from "lucide-react";
-import { Tooltip } from "@radix-ui/react-tooltip";
-import { TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 const useTestUsers = () => {
   const user = useQuery(api.functions.user.get);
@@ -21,22 +26,12 @@ export function PendingFriendsList() {
       <h2 className="text-sm text-muted-foreground p-2.5">Pending Friends</h2>
       {users.map((user, index) => (
         <FriendItem key={index} username={user.username} image={user.image}>
-          <Button
-            className="rounded-full bg-green-100"
-            variant="outline"
-            size="icon"
-          >
-            <CheckIcon />
-            <span className="sr-only">Accept</span>
-          </Button>
-          <Button
-            className="rounded-full bg-red-100"
-            variant="outline"
-            size="icon"
-          >
-            <XIcon />
-            <span className="sr-only">Reject</span>
-          </Button>
+          <IconButton
+            title="Accept"
+            icon={<CheckIcon />}
+            className="bg-green-100"
+          />
+          <IconButton title="Reject" icon={<XIcon />} className="bg-red-100" />
         </FriendItem>
       ))}
       {}
@@ -59,15 +54,13 @@ export function AcceptedFriendsList() {
               </Button>
             </TooltipTrigger>
             <TooltipContent>Start DM</TooltipContent>
+            <IconButton title="Start DM" icon={<MessageCircleIcon />} />
+            <IconButton
+              title="Remove Friend"
+              icon={<XIcon />}
+              className="bg-red-100"
+            />
           </Tooltip>
-          <Button
-            className="rounded-full bg-red-100"
-            variant="outline"
-            size="icon"
-          >
-            <XIcon />
-            <span className="sr-only">Remove Friend</span>
-          </Button>
         </FriendItem>
       ))}
       {}
@@ -79,7 +72,7 @@ function IconButton({
   title,
   className,
   icon,
-} : {
+}: {
   title: string;
   className?: string;
   icon: React.ReactNode;
@@ -87,14 +80,18 @@ function IconButton({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button className={className} variant="outline" size="icon">
+        <Button
+          className={cn("rounded-full", className)}
+          variant="outline"
+          size="icon"
+        >
           {icon}
           <span className="sr-only">{title}</span>
         </Button>
       </TooltipTrigger>
       <TooltipContent>{title}</TooltipContent>
     </Tooltip>
-  )
+  );
 }
 
 function FriendItem({

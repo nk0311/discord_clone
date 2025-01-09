@@ -1,6 +1,6 @@
-import { customCtx, customQuery } from "convex-helpers/server/customFunctions";
+import { customCtx, customMutation, customQuery } from "convex-helpers/server/customFunctions";
 import { getCurrentUser } from "./user";
-import { query } from "../_generated/server";
+import { mutation, query } from "../_generated/server";
 
 export const authenticatedQuery = customQuery(
   query,
@@ -13,8 +13,8 @@ export const authenticatedQuery = customQuery(
   })
 );
 
-export const authenticatedMutation = customQuery(
-  query,
+export const authenticatedMutation = customMutation(
+  mutation,
   customCtx(async (ctx) => {
     const user = await getCurrentUser(ctx);
     if (!user) {

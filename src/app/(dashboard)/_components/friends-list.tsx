@@ -16,14 +16,19 @@ const useTestUsers = () => {
   if (!user) {
     return [];
   }
-  return [user, user, user, user, user];
+  return [user, user, user];
 };
 
 export function PendingFriendsList() {
   const users = useTestUsers();
   return (
     <div className="flex flex-col divide-y">
-      <h2 className="text-sm text-muted-foreground p-2.5">Pending Friends</h2>
+      <h2 className="text-xs font-medium text-muted-foreground p-2.5">Pending Friends</h2>
+      {users.length === 0 && (
+        <FriendsListEmpty>
+          You don't have any pending friend requests.
+        </FriendsListEmpty>
+      )}
       {users.map((user, index) => (
         <FriendItem key={index} username={user.username} image={user.image}>
           <IconButton
@@ -34,7 +39,6 @@ export function PendingFriendsList() {
           <IconButton title="Reject" icon={<XIcon />} className="bg-red-100" />
         </FriendItem>
       ))}
-      {}
     </div>
   );
 }
@@ -43,27 +47,28 @@ export function AcceptedFriendsList() {
   const users = useTestUsers();
   return (
     <div className="flex flex-col divide-y">
-      <h2 className="text-sm text-muted-foreground p-2.5">Accepted Friends</h2>
+      <h2 className="text-xs font-medium text-muted-foreground p-2.5">Accepted Friends</h2>
+      {users.length === 0 && (
+        <FriendsListEmpty>You don't have any friends yet.</FriendsListEmpty>
+      )}
       {users.map((user, index) => (
         <FriendItem key={index} username={user.username} image={user.image}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button className="rounded-full" variant="outline" size="icon">
-                <MessageCircleIcon />
-                <span className="sr-only">Start DM</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Start DM</TooltipContent>
-            <IconButton title="Start DM" icon={<MessageCircleIcon />} />
-            <IconButton
-              title="Remove Friend"
-              icon={<XIcon />}
-              className="bg-red-100"
-            />
-          </Tooltip>
+          <IconButton title="Start DM" icon={<MessageCircleIcon />} />
+          <IconButton
+            title="Remove Friend"
+            icon={<XIcon />}
+            className="bg-red-100"
+          />
         </FriendItem>
       ))}
-      {}
+    </div>
+  );
+}
+
+function FriendsListEmpty({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="p-4 bg-muted/50 text-center text-sm text-muted-foreground">
+      {children}
     </div>
   );
 }
